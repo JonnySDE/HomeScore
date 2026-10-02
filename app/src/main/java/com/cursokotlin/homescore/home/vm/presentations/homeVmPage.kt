@@ -12,6 +12,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -86,6 +88,43 @@ fun viviendaPagina(viewModel: homeViewModel = viewModel()) {
                     viewModel.cambiarTexto("ahorro", it)
                 }
             }
+            TarjetaBlanca {
+                CampoDinero(
+                    "Tasa de interés",
+                    estado.tasaInteres,
+                    prefijo = "",
+                    sufijo = "% anual"
+                ){
+                    viewModel.cambiarTexto("tasaInteres", it)
+                }
+            }
+        }
+        TarjetaBlanca {
+            Text(
+                text = "Plazo",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Slider(
+                value = estado.anios,
+                onValueChange = viewModel::cambiarAnios,
+                valueRange = 5f..30f,
+                steps = 24,
+                colors = SliderDefaults.colors(
+                    thumbColor = Color(0xFF0D3B85),         // Azul oscuro del botón
+                    activeTrackColor = Color(0xFF0D3B85),   // Barra activa azul oscuro
+                    inactiveTrackColor = Color(0xFFE2E7F8), // Barra inactiva azul claro
+                    activeTickColor = Color(0xFFFFFFFF),    // Puntos blancos dentro de la barra activa
+                    inactiveTickColor = Color(0xFF0D3B85)  // Puntos morados/azules dentro de la barra inactiva
+                )
+            )
+            Text(
+                text = estado.anios.toInt().toString() + " años",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                color = Color(0xFF103E8A),
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
@@ -110,6 +149,8 @@ fun TarjetaBlanca(
 fun CampoDinero(
     etiqueta: String,
     valor: String,
+    prefijo: String = "$",
+    sufijo: String = "",
     alCambiar: (String) -> Unit
 ) {
     OutlinedTextField(

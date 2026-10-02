@@ -10,7 +10,9 @@ data class ViviendaEstado(
     val precioVivienda:  String = "",
     val enganche : String = "",
     val ahorro: String = "",
-    val porcentajeEnganche:String = ""
+    val porcentajeEnganche:String = "",
+    val tasaInteres: String = "",
+    val anios: Float = 15f
 
 )
 
@@ -26,6 +28,7 @@ class homeViewModel : ViewModel() {
                 "precioVivienda" -> estadoActual.copy(precioVivienda = textoLimpio)
                 "enganche" -> estadoActual.copy(enganche = textoLimpio)
                 "ahorro" -> estadoActual.copy(ahorro = textoLimpio)
+                "tasaInteres" -> estadoActual.copy(tasaInteres = textoLimpio)
                 else -> estadoActual
             }
 
@@ -36,5 +39,8 @@ class homeViewModel : ViewModel() {
             estadoNuevo.copy(porcentajeEnganche = porcentaje)
 
         }
+    }
+    fun cambiarAnios(nuevoAnios: Float){
+        _estado.update { it.copy(anios = nuevoAnios) }
     }
 }

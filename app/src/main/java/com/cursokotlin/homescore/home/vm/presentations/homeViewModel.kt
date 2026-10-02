@@ -12,7 +12,13 @@ data class ViviendaEstado(
     val ahorro: String = "",
     val porcentajeEnganche:String = "",
     val tasaInteres: String = "",
-    val anios: Float = 15f
+    val anios: Float = 15f,
+    val ingreso: String = "",
+    val gastos: String = "",
+    val seguros: String = "",
+    val mantenimiento: String = "",
+    val predial: String = "",
+    val servicios: String = ""
 
 )
 
@@ -29,6 +35,12 @@ class homeViewModel : ViewModel() {
                 "enganche" -> estadoActual.copy(enganche = textoLimpio)
                 "ahorro" -> estadoActual.copy(ahorro = textoLimpio)
                 "tasaInteres" -> estadoActual.copy(tasaInteres = textoLimpio)
+                "ingreso" -> estadoActual.copy(ingreso = textoLimpio)
+                "gastos" -> estadoActual.copy(gastos = textoLimpio)
+                "seguros" -> estadoActual.copy(seguros = textoLimpio)
+                "mantenimiento" -> estadoActual.copy(mantenimiento = textoLimpio)
+                "predial" -> estadoActual.copy(predial = textoLimpio)
+                "servicios" -> estadoActual.copy(servicios = textoLimpio)
                 else -> estadoActual
             }
 

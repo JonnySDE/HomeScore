@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -58,18 +59,56 @@ fun viviendaPagina(viewModel: homeViewModel = viewModel()) {
             .background(Color(0xFFF0F4FA))
             .verticalScroll(rememberScrollState())
     ) {
-        Text(
-            text = "Home Score : ¿Puedo comprar una vivienda?",
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF103E8A), RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp))
                 .statusBarsPadding()
-                .padding(24.dp),
-            color = Color.White,
-            fontSize = 24.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
+                .padding(horizontal = 10.dp),
+            shape = RoundedCornerShape(28.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFF103E8A)
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Home Score",
+                        color = Color.White,
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = "¿Puedo comprar una casa?",
+                        color = Color.White,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = "Analiza si se adapta a tu situación financiera.",
+                        color = Color.White,
+                        fontSize = 12.sp
+                    )
+                }
+
+                Image(
+                    painter = painterResource(R.drawable.logocasa),
+                    contentDescription = "Casa",
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                )
+            }
+        }
 
         Column(
             modifier = Modifier.padding(18.dp),
@@ -243,18 +282,24 @@ fun viviendaPagina(viewModel: homeViewModel = viewModel()) {
                 2 -> Color(0xFFC62828)
                 else -> Color.Gray
             }
-            val emoji = when (estado.nivel) {
-                0 -> "🟢"
-                1 -> "🟡"
-                2 -> "🔴"
-                else -> "⚠️"
+            val iconoRes = when (estado.nivel) {
+                0 -> R.drawable.exito
+                1 -> R.drawable.advertencia
+                2 -> R.drawable.error
+                else -> R.drawable.alerta
             }
 
             AlertDialog(
                 onDismissRequest = viewModel::alCerrarAlerta,
                 containerColor = Color.White,
                 shape = RoundedCornerShape(24.dp),
-                icon = { Text(text = emoji, fontSize = 44.sp) },
+                icon = {
+                    Image(
+                        painter = painterResource(id = iconoRes),
+                        contentDescription = "Icono de estado",
+                        modifier = Modifier.size(56.dp)
+                    )
+                },
                 title = {
                     Text(
                         text = estado.tituloAlerta,
@@ -330,8 +375,15 @@ fun CampoDinero(
         value = valor,
         onValueChange = alCambiar,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text(etiqueta) },
+        shape = RoundedCornerShape(14.dp),
+        label = { Text(text = etiqueta, fontSize = 12.sp, maxLines = 1) },
+        prefix = { Text(text = prefijo, color = Color.Black, fontSize = 12.sp) },
+        suffix = { Text(text = sufijo, color = Color.Black, fontSize = 12.sp) },
         singleLine = true,
+        textStyle = TextStyle(
+            color = Color.Black,
+            fontSize = 16.sp,
+        ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal
         )

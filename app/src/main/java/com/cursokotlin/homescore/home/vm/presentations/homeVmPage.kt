@@ -18,18 +18,23 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cursokotlin.homescore.R
 import java.nio.file.WatchEvent
+import kotlin.compareTo
 
 @Composable
 fun viviendaPagina(viewModel: homeViewModel = viewModel()) {
@@ -70,7 +76,7 @@ fun viviendaPagina(viewModel: homeViewModel = viewModel()) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "INFORMACIÓN DE LA PROPIEDAD",
+                text = "Informacion de la propiedad",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF103E8A)
@@ -212,10 +218,86 @@ fun viviendaPagina(viewModel: homeViewModel = viewModel()) {
                     estado.servicios,
                     Modifier.weight(1f)
                 ) {
-                    viewModel.cambiarTexto("servicio", it)
+                    viewModel.cambiarTexto("servicios", it)
                 }
             }
+            Button(
+                onClick = viewModel::calcularAlPresionar,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF103E8A))
+            ){
+                Text(
+                    text = "Realizar análisis",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+        }
+        // Alerta de resultado, en caso de que haya
+        if (estado.mostrarAlerta) {
+            val color = when (estado.nivel) {
+                0 -> Color(0xFF2E7D32)
+                1 -> Color(0xFFF9A825)
+                2 -> Color(0xFFC62828)
+                else -> Color.Gray
+            }
+            val emoji = when (estado.nivel) {
+                0 -> "🟢"
+                1 -> "🟡"
+                2 -> "🔴"
+                else -> "⚠️"
+            }
 
+            AlertDialog(
+                onDismissRequest = viewModel::alCerrarAlerta,
+                containerColor = Color.White,
+                shape = RoundedCornerShape(24.dp),
+                icon = { Text(text = emoji, fontSize = 44.sp) },
+                title = {
+                    Text(
+                        text = estado.tituloAlerta,
+                        color = color,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                text = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(450.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+
+                        if (estado.nivel < 3) {
+                            Text(
+                                text = estado.textoProgreso,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                            LinearProgressIndicator(
+                                progress = { estado.progreso },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(10.dp)
+                                    .clip(RoundedCornerShape(50)),
+                                color = color
+                            )
+                            Spacer(modifier = Modifier.height(14.dp))
+                        }
+                        Text(text = estado.mensajeAlerta, fontSize = 14.sp, color = Color.Black)
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = viewModel::alCerrarAlerta) {
+                        Text(text = "Entendido", color = color, fontWeight = FontWeight.Bold)
+                    }
+                }
+            )
         }
     }
 }

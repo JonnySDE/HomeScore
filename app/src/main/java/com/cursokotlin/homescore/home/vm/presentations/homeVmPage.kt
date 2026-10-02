@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
@@ -39,7 +40,8 @@ fun viviendaPagina(viewModel: homeViewModel = viewModel()) {
             text = "Home Score : ¿Puedo comprar una vivienda",
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF103E8A))
+                .background(Color(0xFF103E8A), RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp))
+                .statusBarsPadding()
                 .padding(24.dp),
 
             color = Color.White,
@@ -64,13 +66,24 @@ fun viviendaPagina(viewModel: homeViewModel = viewModel()) {
                     viewModel.cambiarTexto("precioVivienda", it)
                 }
             }
-            Spacer(modifier = Modifier.padding(20.dp))
             TarjetaBlanca {
                 CampoDinero(
                     etiqueta = "Enganche",
                     estado.enganche,
                 ) {
                     viewModel.cambiarTexto("enganche", it)
+                }
+                Text(
+                    text = estado.porcentajeEnganche,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xFF103E8A),
+                    fontWeight = FontWeight.Bold
+                )
+                CampoDinero(
+                    "Ahorro disponible",
+                    estado.ahorro
+                ){
+                    viewModel.cambiarTexto("ahorro", it)
                 }
             }
         }
